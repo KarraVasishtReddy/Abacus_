@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -126,7 +127,32 @@ nav.links a:hover, nav.links a:focus-visible{
   cursor:pointer;
 }
 .nav-cta:hover{ transform:translateY(-1px); box-shadow:0 5px 0 rgba(61,40,23,0.18); }
+.nav-right{ display:flex; align-items:center; gap:14px; }
+.score-badge{
+  display:flex; align-items:center; gap:8px;
+  background:var(--cream-deep);
+  border:2px solid var(--walnut);
+  border-radius:20px;
+  padding:6px 12px;
+  font-family:'JetBrains Mono', monospace;
+  font-size:13px; font-weight:700;
+  color:var(--walnut);
+}
+.score-badge .streak-flame{ color:var(--bead-gold-dark); }
+.sound-toggle{
+  width:36px; height:36px;
+  border-radius:50%;
+  border:2px solid var(--walnut);
+  background:#fff;
+  color:var(--walnut);
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px;
+  flex-shrink:0;
+}
+.sound-toggle:hover{ background:var(--cream-deep); }
 @media (max-width: 760px){
+  .score-badge span.full-label{ display:none; }
   nav.links{display:none;}
 }
 
@@ -250,7 +276,7 @@ nav.links a:hover, nav.links a:focus-visible{
   content:"";
   position:absolute;
   left:8px; right:8px;
-  top:54px;
+  top:46px;
   height:8px;
   background:var(--frame-wood-dark);
   border-radius:3px;
@@ -508,6 +534,209 @@ footer .foot-links{ display:flex; gap:20px; justify-content:center; margin-botto
 footer .foot-links a{ text-decoration:none; color:var(--walnut); font-size:14px; font-weight:700; }
 footer .foot-links a:hover{ color:var(--bead-red); }
 
+/* ============ PRACTICE SESSION MODAL ============ */
+.session-overlay{
+  position:fixed; inset:0;
+  background:rgba(61,40,23,0.55);
+  display:none;
+  align-items:center; justify-content:center;
+  padding:20px;
+  z-index:100;
+}
+.session-overlay.open{ display:flex; }
+.session-card{
+  background:var(--cream);
+  border:3px solid var(--walnut);
+  border-radius:28px;
+  max-width:560px;
+  width:100%;
+  max-height:92vh;
+  overflow-y:auto;
+  padding:32px;
+  box-shadow:var(--shadow-deep);
+  position:relative;
+}
+.session-close{
+  position:absolute; top:18px; right:18px;
+  width:36px; height:36px;
+  border-radius:50%;
+  border:2px solid var(--walnut);
+  background:#fff;
+  cursor:pointer;
+  font-size:18px;
+  line-height:1;
+  color:var(--walnut);
+}
+.session-close:hover{ background:var(--bead-red); color:#fff; border-color:var(--bead-red-dark); }
+.session-head{ text-align:center; margin-bottom:18px; }
+.session-head .eyebrow{ margin-bottom:10px; }
+.session-stats{
+  display:flex; justify-content:center; gap:24px;
+  margin-bottom:20px;
+  font-family:'JetBrains Mono', monospace;
+  font-size:13px; font-weight:700;
+  color:var(--walnut-soft);
+}
+.session-stats b{ color:var(--walnut); font-size:15px; }
+.session-problem{
+  text-align:center;
+  font-family:'JetBrains Mono', monospace;
+  font-size:30px; font-weight:700;
+  margin-bottom:6px;
+}
+.session-problem .target-val{ color:var(--bead-red); }
+.session-subtext{
+  text-align:center;
+  font-size:13px;
+  color:var(--walnut-soft);
+  font-weight:700;
+  margin-bottom:20px;
+}
+.mini-abacus-frame{
+  background: linear-gradient(180deg, var(--frame-wood) 0%, var(--frame-wood-dark) 100%);
+  border-radius:18px;
+  padding:18px;
+  box-shadow:var(--shadow-soft);
+  margin-bottom:18px;
+}
+.mini-readout{
+  display:flex; justify-content:center; align-items:center; gap:10px;
+  background:var(--walnut);
+  border-radius:10px;
+  padding:8px 14px;
+  margin-bottom:14px;
+}
+.mini-readout strong{
+  font-family:'JetBrains Mono', monospace;
+  font-weight:700; font-size:26px;
+  color:#fff;
+  min-width:70px;
+  text-align:center;
+}
+.mini-rods{
+  display:flex;
+  justify-content:center;
+  gap:14px;
+  padding:12px 8px 4px;
+  background: var(--rod-wood);
+  border-radius:10px;
+  position:relative;
+}
+.mini-rods::after{
+  content:"";
+  position:absolute;
+  left:6px; right:6px;
+  top:38px;
+  height:6px;
+  background:var(--frame-wood-dark);
+  border-radius:3px;
+  z-index:1;
+}
+.mini-rod{
+  position:relative;
+  width:38px;
+  height:184px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.mini-rod .rod-line{ width:5px; margin-left:-2.5px; }
+.mini-rod .bead{ width:32px; height:21px; }
+.mini-rod .rod-label{ font-size:10px; }
+.session-check-btn{
+  display:block;
+  margin:0 auto 14px;
+  background:var(--bead-blue);
+  color:#fff;
+  border:none;
+  font-weight:800;
+  font-size:16px;
+  padding:13px 32px;
+  border-radius:30px;
+  cursor:pointer;
+  box-shadow:0 5px 0 var(--bead-blue-dark);
+}
+.session-check-btn:hover{ transform:translateY(-1px); box-shadow:0 6px 0 var(--bead-blue-dark); }
+.session-check-btn:active{ transform:translateY(2px); box-shadow:0 2px 0 var(--bead-blue-dark); }
+.session-feedback{
+  text-align:center;
+  min-height:28px;
+  font-weight:800;
+  font-size:16px;
+  margin-bottom:4px;
+}
+.session-feedback.is-correct{ color:var(--bead-green-dark); }
+.session-feedback.is-wrong{ color:var(--bead-red-dark); }
+.session-complete{
+  text-align:center;
+}
+.session-complete .big-score{
+  font-family:'Baloo 2',sans-serif;
+  font-size:48px;
+  color:var(--bead-red);
+  margin-bottom:6px;
+}
+
+/* ============ SPEED ROUND MODAL ============ */
+.speed-timer-track{
+  height:10px;
+  background:var(--cream-deep);
+  border:2px solid var(--walnut);
+  border-radius:10px;
+  overflow:hidden;
+  margin-bottom:20px;
+}
+.speed-timer-fill{
+  height:100%;
+  background:var(--bead-green);
+  border-radius:10px 0 0 10px;
+  transition:width 0.2s linear, background-color 0.2s linear;
+}
+.speed-timer-fill.is-low{ background:var(--bead-red); }
+.speed-problem{
+  text-align:center;
+  font-family:'JetBrains Mono', monospace;
+  font-size:36px;
+  font-weight:700;
+  margin-bottom:22px;
+}
+.speed-choices{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-bottom:16px;
+}
+.speed-choice{
+  font-family:'JetBrains Mono', monospace;
+  font-size:22px;
+  font-weight:700;
+  padding:18px;
+  border-radius:14px;
+  border:3px solid var(--walnut);
+  background:#fff;
+  cursor:pointer;
+  transition: background .1s, color .1s, transform .08s;
+}
+.speed-choice:hover:not(:disabled){ background:var(--bead-gold); transform:translateY(-2px); }
+.speed-choice.correct{ background:var(--bead-green); color:#fff; border-color:var(--bead-green-dark); }
+.speed-choice.wrong{ background:var(--bead-red); color:#fff; border-color:var(--bead-red-dark); }
+.speed-choice:disabled{ cursor:default; }
+.speed-feedback{
+  text-align:center;
+  min-height:24px;
+  font-weight:800;
+  font-size:15px;
+}
+.speed-feedback.is-correct{ color:var(--bead-green-dark); }
+.speed-feedback.is-wrong{ color:var(--bead-red-dark); }
+.speed-best{
+  text-align:center;
+  font-size:13px;
+  color:var(--walnut-soft);
+  font-weight:700;
+  margin-top:4px;
+}
+
 .sr-only{
   position:absolute; width:1px; height:1px; padding:0; margin:-1px;
   overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
@@ -526,7 +755,15 @@ footer .foot-links a:hover{ color:var(--bead-red); }
       <a href="#modules">Practice modules</a>
       <a href="#how">How it works</a>
     </nav>
-    <button class="nav-cta" onclick="document.getElementById('modules').scrollIntoView({behavior:'smooth'})">Start practicing</button>
+    <div class="nav-right">
+      <div class="score-badge" id="scoreBadge" aria-live="polite">
+        <span class="streak-flame" aria-hidden="true">★</span>
+        <span id="scoreValue">0</span>
+        <span class="full-label">pts</span>
+      </div>
+      <button class="sound-toggle" id="soundToggle" aria-label="Mute sound effects" aria-pressed="false" title="Toggle sound">🔊</button>
+      <button class="nav-cta" onclick="document.getElementById('modules').scrollIntoView({behavior:'smooth'})">Start practicing</button>
+    </div>
   </div>
 </header>
 
@@ -578,21 +815,21 @@ footer .foot-links a:hover{ color:var(--bead-red); }
           <h3>Place value builder</h3>
           <p>Move beads to build a target number on the abacus.</p>
         </div>
-        <span class="module-level">level 1</span>
+        <span class="module-level">coming soon</span>
       </a>
 
-      <a class="module-row" href="#" data-module="addition">
+      <a class="module-row" href="#" data-module="addition" id="additionModuleCard">
         <div class="module-bead-icon mi-green" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
         </div>
         <div class="module-text">
           <h3>Bead addition</h3>
-          <p>Add two numbers by combining beads on two rods.</p>
+          <p>Add two numbers by setting beads on the abacus.</p>
         </div>
-        <span class="module-level">level 2</span>
+        <span class="module-level">play now</span>
       </a>
 
-      <a class="module-row" href="#" data-module="subtraction">
+      <a class="module-row" href="#" data-module="subtraction" id="subtractionModuleCard">
         <div class="module-bead-icon mi-red" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 12h14"/></svg>
         </div>
@@ -600,10 +837,10 @@ footer .foot-links a:hover{ color:var(--bead-red); }
           <h3>Bead subtraction</h3>
           <p>Take beads away and read the number that's left.</p>
         </div>
-        <span class="module-level">level 2</span>
+        <span class="module-level">play now</span>
       </a>
 
-      <a class="module-row" href="#" data-module="speed">
+      <a class="module-row" href="#" data-module="speed" id="speedModuleCard">
         <div class="module-bead-icon mi-gold" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="9"/></svg>
         </div>
@@ -611,7 +848,7 @@ footer .foot-links a:hover{ color:var(--bead-red); }
           <h3>Speed rounds</h3>
           <p>Mental math against the clock once the basics feel easy.</p>
         </div>
-        <span class="module-level">level 3</span>
+        <span class="module-level">play now</span>
       </a>
     </div>
   </section>
@@ -652,6 +889,76 @@ footer .foot-links a:hover{ color:var(--bead-red); }
 
 </main>
 
+<div class="session-overlay" id="sessionOverlay" role="dialog" aria-modal="true" aria-labelledby="sessionTitle">
+  <div class="session-card">
+    <button class="session-close" id="sessionClose" aria-label="Close practice session">&times;</button>
+
+    <div id="sessionPlay">
+      <div class="session-head">
+        <span class="eyebrow" id="sessionTitle">bead addition</span>
+      </div>
+      <div class="session-stats">
+        <span>Problem <b id="sessionProgress">1 / 8</b></span>
+        <span>Streak <b id="sessionStreak">0</b></span>
+        <span>Score <b id="sessionScore">0</b></span>
+      </div>
+      <div class="session-problem" id="sessionProblem">7 + 5 = <span class="target-val">?</span></div>
+      <p class="session-subtext" id="sessionSubtext">Set the beads on the abacus to show your answer, then check it.</p>
+
+      <div class="mini-abacus-frame">
+        <div class="mini-readout">
+          <strong id="sessionReadout">0</strong>
+        </div>
+        <div class="mini-rods" id="sessionRods"></div>
+      </div>
+
+      <button class="session-check-btn" id="sessionCheck">Check answer</button>
+      <p class="session-feedback" id="sessionFeedback"></p>
+    </div>
+
+    <div id="sessionDone" class="session-complete" style="display:none;">
+      <div class="eyebrow">round complete</div>
+      <div class="big-score" id="sessionFinalScore">0</div>
+      <p style="color:var(--walnut-soft); font-weight:700; margin-bottom:20px;" id="sessionFinalLine">You got 8 of 8 right.</p>
+      <button class="btn btn-primary" id="sessionPlayAgain">Play again &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<div class="session-overlay" id="speedOverlay" role="dialog" aria-modal="true" aria-labelledby="speedTitle">
+  <div class="session-card">
+    <button class="session-close" id="speedClose" aria-label="Close speed round">&times;</button>
+
+    <div id="speedPlay">
+      <div class="session-head">
+        <span class="eyebrow" id="speedTitle">speed round</span>
+      </div>
+      <div class="session-stats">
+        <span>Problem <b id="speedProgress">1 / 10</b></span>
+        <span>Streak <b id="speedStreak">0</b></span>
+        <span>Score <b id="speedScore">0</b></span>
+      </div>
+      <div class="speed-timer-track"><div class="speed-timer-fill" id="speedTimerFill" style="width:100%;"></div></div>
+      <div class="speed-problem" id="speedProblem">7 + 5 = ?</div>
+      <div class="speed-choices" id="speedChoices">
+        <button class="speed-choice">11</button>
+        <button class="speed-choice">12</button>
+        <button class="speed-choice">13</button>
+        <button class="speed-choice">10</button>
+      </div>
+      <p class="speed-feedback" id="speedFeedback"></p>
+    </div>
+
+    <div id="speedDone" class="session-complete" style="display:none;">
+      <div class="eyebrow">round complete</div>
+      <div class="big-score" id="speedFinalScore">0</div>
+      <p style="color:var(--walnut-soft); font-weight:700; margin-bottom:6px;" id="speedFinalLine">8 of 10 correct.</p>
+      <p class="speed-best" id="speedBestLine">Best streak this round: 5</p>
+      <button class="btn btn-primary" id="speedPlayAgain" style="margin-top:18px;">Play again &rarr;</button>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div class="foot-links">
     <a href="#abacus">Abacus</a>
@@ -663,6 +970,116 @@ footer .foot-links a:hover{ color:var(--bead-red); }
 </footer>
 
 <script>
+(function(){
+  // ---- sound engine: tiny Web Audio synth, no audio files needed ----
+  var AudioCtx = window.AudioContext || window.webkitAudioContext;
+  var actx = null;
+  var soundOn = true;
+  try {
+    var stored = localStorage.getItem('abacusmath_sound');
+    if (stored === 'off') soundOn = false;
+  } catch(e){}
+
+  function ensureCtx(){
+    if (!AudioCtx) return null;
+    if (!actx) actx = new AudioCtx();
+    if (actx.state === 'suspended') actx.resume();
+    return actx;
+  }
+
+  function beep(freq, duration, type, gainPeak){
+    if (!soundOn) return;
+    var ctx = ensureCtx();
+    if (!ctx) return;
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.value = freq;
+    gain.gain.value = 0;
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    var now = ctx.currentTime;
+    gain.gain.linearRampToValueAtTime(gainPeak || 0.18, now + 0.012);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+    osc.start(now);
+    osc.stop(now + duration + 0.02);
+  }
+
+  var Sound = {
+    bead: function(){ beep(520 + Math.random()*40, 0.09, 'triangle', 0.12); },
+    correct: function(){
+      beep(523.25, 0.11, 'sine', 0.16);
+      setTimeout(function(){ beep(659.25, 0.11, 'sine', 0.16); }, 90);
+      setTimeout(function(){ beep(783.99, 0.16, 'sine', 0.16); }, 180);
+    },
+    wrong: function(){
+      beep(196, 0.22, 'sawtooth', 0.10);
+    },
+    complete: function(){
+      [523.25, 587.33, 659.25, 783.99].forEach(function(f, i){
+        setTimeout(function(){ beep(f, 0.18, 'sine', 0.14); }, i*110);
+      });
+    },
+    setEnabled: function(v){
+      soundOn = v;
+      try { localStorage.setItem('abacusmath_sound', v ? 'on' : 'off'); } catch(e){}
+    },
+    isEnabled: function(){ return soundOn; }
+  };
+  window.AbacusSound = Sound;
+
+  var soundToggle = document.getElementById('soundToggle');
+  if (soundToggle){
+    function syncToggleLabel(){
+      soundToggle.textContent = Sound.isEnabled() ? '\uD83D\uDD0A' : '\uD83D\uDD07';
+      soundToggle.setAttribute('aria-pressed', String(!Sound.isEnabled()));
+      soundToggle.setAttribute('aria-label', Sound.isEnabled() ? 'Mute sound effects' : 'Unmute sound effects');
+    }
+    syncToggleLabel();
+    soundToggle.addEventListener('click', function(){
+      ensureCtx();
+      Sound.setEnabled(!Sound.isEnabled());
+      syncToggleLabel();
+      if (Sound.isEnabled()) Sound.bead();
+    });
+  }
+
+  // ---- score, persisted in localStorage ----
+  var Progress = {
+    get: function(){
+      var raw = {score:0, bestStreak:0};
+      try {
+        var stored = JSON.parse(localStorage.getItem('abacusmath_progress') || 'null');
+        if (stored) raw = stored;
+      } catch(e){}
+      return raw;
+    },
+    addScore: function(points){
+      var p = this.get();
+      p.score = Math.max(0, (p.score||0) + points);
+      this.save(p);
+      this.renderBadge();
+      return p;
+    },
+    setBestStreak: function(streak){
+      var p = this.get();
+      if (streak > (p.bestStreak||0)){
+        p.bestStreak = streak;
+        this.save(p);
+      }
+    },
+    save: function(p){
+      try { localStorage.setItem('abacusmath_progress', JSON.stringify(p)); } catch(e){}
+    },
+    renderBadge: function(){
+      var el = document.getElementById('scoreValue');
+      if (el) el.textContent = this.get().score.toLocaleString();
+    }
+  };
+  window.AbacusProgress = Progress;
+  Progress.renderBadge();
+})();
+
 (function(){
   var rodsEl = document.getElementById('rods');
   var readoutEl = document.getElementById('readout');
@@ -752,6 +1169,7 @@ footer .foot-links a:hover{ color:var(--bead-red); }
         state[r].earth = idx + 1;
       }
     }
+    if (window.AbacusSound) window.AbacusSound.bead();
     render();
   };
 
@@ -807,10 +1225,12 @@ footer .foot-links a:hover{ color:var(--bead-red); }
     if (btn.textContent === p.correct){
       btn.classList.add('correct');
       feedbackEl.textContent = 'Nice! That\'s right.';
+      if (window.AbacusSound) window.AbacusSound.correct();
     } else {
       btn.classList.add('wrong');
       feedbackEl.textContent = 'Not quite — the answer is ' + p.correct + '.';
       btns.forEach(function(b){ if (b.textContent === p.correct) b.classList.add('correct'); });
+      if (window.AbacusSound) window.AbacusSound.wrong();
     }
     setTimeout(function(){
       pIndex++;
@@ -820,12 +1240,477 @@ footer .foot-links a:hover{ color:var(--bead-red); }
 
   loadProblem();
 
-  // module rows are placeholders for now — gentle scroll-to-top nudge
+  // coming-soon module rows scroll to the abacus; addition opens the real session
   document.querySelectorAll('.module-row').forEach(function(row){
+    if (row.dataset.module === 'addition') return; // handled separately below
     row.addEventListener('click', function(e){
       e.preventDefault();
       document.getElementById('abacus').scrollIntoView({behavior:'smooth', block:'center'});
     });
+  });
+})();
+
+(function(){
+  // ---- bead addition / subtraction practice session (shared abacus UI) ----
+  var overlay = document.getElementById('sessionOverlay');
+  var addCard = document.getElementById('additionModuleCard');
+  var subCard = document.getElementById('subtractionModuleCard');
+  var closeBtn = document.getElementById('sessionClose');
+  var playEl = document.getElementById('sessionPlay');
+  var doneEl = document.getElementById('sessionDone');
+  var titleEl = document.getElementById('sessionTitle');
+  var subtextEl = document.getElementById('sessionSubtext');
+  var problemEl = document.getElementById('sessionProblem');
+  var progressEl = document.getElementById('sessionProgress');
+  var streakEl = document.getElementById('sessionStreak');
+  var scoreEl = document.getElementById('sessionScore');
+  var feedbackEl = document.getElementById('sessionFeedback');
+  var checkBtn = document.getElementById('sessionCheck');
+  var readoutEl = document.getElementById('sessionReadout');
+  var rodsEl = document.getElementById('sessionRods');
+  var finalScoreEl = document.getElementById('sessionFinalScore');
+  var finalLineEl = document.getElementById('sessionFinalLine');
+  var playAgainBtn = document.getElementById('sessionPlayAgain');
+
+  if (!overlay) return;
+
+  var TOTAL_PROBLEMS = 8;
+  var numRods = 2; // ones, tens — enough for sums/differences up to 99
+  var rodNames = ['ONES', 'TENS'];
+  var state, current, idx, streak, sessionScore, locked, mode;
+
+  function freshState(){
+    var s = [];
+    for (var i = 0; i < numRods; i++) s.push({heaven:false, earth:0});
+    return s;
+  }
+
+  function buildRods(){
+    rodsEl.innerHTML = '';
+    for (var r = numRods - 1; r >= 0; r--){
+      var rod = document.createElement('div');
+      rod.className = 'mini-rod rod';
+      rod.dataset.rod = r;
+
+      var line = document.createElement('div');
+      line.className = 'rod-line';
+      rod.appendChild(line);
+
+      var heavenBead = document.createElement('button');
+      heavenBead.type = 'button';
+      heavenBead.className = 'bead heaven';
+      heavenBead.setAttribute('aria-label', rodNames[r] + ' five-bead, tap to toggle');
+      heavenBead.dataset.rod = r;
+      heavenBead.dataset.part = 'heaven';
+      rod.appendChild(heavenBead);
+
+      for (var e = 0; e < 4; e++){
+        var earthBead = document.createElement('button');
+        earthBead.type = 'button';
+        earthBead.className = 'bead earth-' + e;
+        earthBead.setAttribute('aria-label', rodNames[r] + ' one-bead ' + (e+1) + ', tap to toggle');
+        earthBead.dataset.rod = r;
+        earthBead.dataset.part = 'earth';
+        earthBead.dataset.index = e;
+        rod.appendChild(earthBead);
+      }
+
+      var label = document.createElement('div');
+      label.className = 'rod-label';
+      label.textContent = rodNames[r];
+      rod.appendChild(label);
+
+      rodsEl.appendChild(rod);
+    }
+  }
+
+  function currentValue(){
+    var total = 0;
+    for (var r = 0; r < numRods; r++){
+      var place = Math.pow(10, r);
+      var val = (state[r].heaven ? 5 : 0) + state[r].earth;
+      total += val * place;
+    }
+    return total;
+  }
+
+  function render(){
+    var beads = rodsEl.querySelectorAll('.bead');
+    beads.forEach(function(b){
+      var r = parseInt(b.dataset.rod, 10);
+      var s = state[r];
+      if (b.dataset.part === 'heaven'){
+        b.style.marginTop = s.heaven ? '4px' : '0px';
+        b.style.opacity = s.heaven ? '1' : '0.55';
+      } else {
+        var i = parseInt(b.dataset.index, 10);
+        var active = i < s.earth;
+        b.style.marginTop = active ? '12px' : '4px';
+        b.style.opacity = active ? '1' : '0.55';
+      }
+    });
+    readoutEl.textContent = currentValue().toLocaleString();
+  }
+
+  function beadClick(e){
+    var b = e.target.closest('.bead');
+    if (!b || locked) return;
+    var r = parseInt(b.dataset.rod, 10);
+    if (b.dataset.part === 'heaven'){
+      state[r].heaven = !state[r].heaven;
+    } else {
+      var i = parseInt(b.dataset.index, 10);
+      if (i < state[r].earth) state[r].earth = i;
+      else state[r].earth = i + 1;
+    }
+    if (window.AbacusSound) window.AbacusSound.bead();
+    render();
+  }
+
+  function newProblem(){
+    var a, b, answer, symbol;
+    if (mode === 'subtraction'){
+      // ensure a non-negative, kid-friendly difference
+      a = Math.floor(Math.random() * 60) + 20;   // 20..79
+      b = Math.floor(Math.random() * Math.min(a - 1, 44)) + 4; // 4..min(a-1,44)
+      answer = a - b;
+      symbol = '-';
+    } else {
+      a = Math.floor(Math.random() * 41) + 4;   // 4..44
+      b = Math.floor(Math.random() * 41) + 4;   // 4..44
+      answer = a + b;
+      symbol = '+';
+    }
+    current = {a:a, b:b, answer:answer, symbol:symbol};
+    problemEl.innerHTML = current.a + ' ' + symbol + ' ' + current.b + ' = <span class="target-val">?</span>';
+    state = freshState();
+    render();
+    feedbackEl.textContent = '';
+    feedbackEl.className = 'session-feedback';
+    checkBtn.disabled = false;
+    locked = false;
+  }
+
+  function updateStatsDisplay(){
+    progressEl.textContent = Math.min(idx + 1, TOTAL_PROBLEMS) + ' / ' + TOTAL_PROBLEMS;
+    streakEl.textContent = streak;
+    scoreEl.textContent = sessionScore;
+  }
+
+  function startSession(){
+    idx = 0;
+    streak = 0;
+    sessionScore = 0;
+    locked = false;
+    playEl.style.display = '';
+    doneEl.style.display = 'none';
+    updateStatsDisplay();
+    newProblem();
+  }
+
+  function finishSession(){
+    finalScoreEl.textContent = '+' + sessionScore;
+    var correctCount = Math.round(sessionScore / 10) > TOTAL_PROBLEMS ? TOTAL_PROBLEMS : Math.round(sessionScore / 10);
+    finalLineEl.textContent = 'Nice round! ' + correctCount + ' of ' + TOTAL_PROBLEMS + ' correct, best streak ' + window.AbacusProgress.get().bestStreak + '.';
+    playEl.style.display = 'none';
+    doneEl.style.display = '';
+    if (window.AbacusSound) window.AbacusSound.complete();
+  }
+
+  function checkAnswer(){
+    if (locked) return;
+    locked = true;
+    checkBtn.disabled = true;
+    var given = currentValue();
+    if (given === current.answer){
+      streak++;
+      sessionScore += 10 + Math.max(0, streak - 1) * 2; // small streak bonus
+      feedbackEl.textContent = 'Correct! ' + current.a + ' ' + current.symbol + ' ' + current.b + ' = ' + current.answer;
+      feedbackEl.className = 'session-feedback is-correct';
+      window.AbacusProgress.addScore(10 + Math.max(0, streak - 1) * 2);
+      window.AbacusProgress.setBestStreak(streak);
+      if (window.AbacusSound) window.AbacusSound.correct();
+    } else {
+      streak = 0;
+      feedbackEl.textContent = 'Not quite — you showed ' + given + '. The answer is ' + current.answer + '.';
+      feedbackEl.className = 'session-feedback is-wrong';
+      if (window.AbacusSound) window.AbacusSound.wrong();
+    }
+    updateStatsDisplay();
+    setTimeout(function(){
+      idx++;
+      if (idx >= TOTAL_PROBLEMS){
+        finishSession();
+      } else {
+        newProblem();
+        updateStatsDisplay();
+      }
+    }, 1300);
+  }
+
+  function openSession(newMode){
+    mode = newMode;
+    if (mode === 'subtraction'){
+      titleEl.textContent = 'bead subtraction';
+      subtextEl.textContent = 'Set the beads to show the difference, then check it.';
+    } else {
+      titleEl.textContent = 'bead addition';
+      subtextEl.textContent = 'Set the beads on the abacus to show your answer, then check it.';
+    }
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    startSession();
+  }
+
+  function closeSession(){
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  buildRods();
+  rodsEl.addEventListener('click', beadClick);
+  rodsEl.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      beadClick(e);
+    }
+  });
+
+  checkBtn.addEventListener('click', checkAnswer);
+  playAgainBtn.addEventListener('click', function(){ startSession(); });
+  closeBtn.addEventListener('click', closeSession);
+  overlay.addEventListener('click', function(e){
+    if (e.target === overlay) closeSession();
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeSession();
+  });
+
+  if (addCard){
+    addCard.addEventListener('click', function(e){
+      e.preventDefault();
+      openSession('addition');
+    });
+  }
+  if (subCard){
+    subCard.addEventListener('click', function(e){
+      e.preventDefault();
+      openSession('subtraction');
+    });
+  }
+})();
+
+(function(){
+  // ---- speed round: timed multiple-choice mental math ----
+  var overlay = document.getElementById('speedOverlay');
+  var openCard = document.getElementById('speedModuleCard');
+  var closeBtn = document.getElementById('speedClose');
+  var playEl = document.getElementById('speedPlay');
+  var doneEl = document.getElementById('speedDone');
+  var progressEl = document.getElementById('speedProgress');
+  var streakEl = document.getElementById('speedStreak');
+  var scoreEl = document.getElementById('speedScore');
+  var problemEl = document.getElementById('speedProblem');
+  var choicesEl = document.getElementById('speedChoices');
+  var feedbackEl = document.getElementById('speedFeedback');
+  var timerFillEl = document.getElementById('speedTimerFill');
+  var finalScoreEl = document.getElementById('speedFinalScore');
+  var finalLineEl = document.getElementById('speedFinalLine');
+  var bestLineEl = document.getElementById('speedBestLine');
+  var playAgainBtn = document.getElementById('speedPlayAgain');
+
+  if (!overlay || !openCard) return;
+
+  var TOTAL_PROBLEMS = 10;
+  var TIME_PER_PROBLEM = 8000; // ms
+  var idx, streak, bestStreakThisRound, sessionScore, locked, current;
+  var timerStart, timerRAF;
+
+  function makeProblem(){
+    var isAdd = Math.random() < 0.5;
+    var a, b, answer, symbol;
+    if (isAdd){
+      a = Math.floor(Math.random() * 16) + 2;  // 2..17
+      b = Math.floor(Math.random() * 16) + 2;  // 2..17
+      answer = a + b;
+      symbol = '+';
+    } else {
+      a = Math.floor(Math.random() * 16) + 6;  // 6..21
+      b = Math.floor(Math.random() * (a - 1)) + 1;
+      answer = a - b;
+      symbol = '-';
+    }
+    // build 3 distinct wrong choices near the true answer
+    var choices = [answer];
+    while (choices.length < 4){
+      var delta = Math.floor(Math.random() * 7) - 3; // -3..3
+      var candidate = answer + delta;
+      if (candidate < 0) candidate = answer + Math.abs(delta) + 1;
+      if (candidate !== answer && choices.indexOf(candidate) === -1){
+        choices.push(candidate);
+      }
+    }
+    // shuffle
+    for (var i = choices.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = choices[i]; choices[i] = choices[j]; choices[j] = tmp;
+    }
+    return {a:a, b:b, answer:answer, symbol:symbol, choices:choices};
+  }
+
+  function updateStatsDisplay(){
+    progressEl.textContent = Math.min(idx + 1, TOTAL_PROBLEMS) + ' / ' + TOTAL_PROBLEMS;
+    streakEl.textContent = streak;
+    scoreEl.textContent = sessionScore;
+  }
+
+  function stopTimer(){
+    if (timerRAF) cancelAnimationFrame(timerRAF);
+    timerRAF = null;
+  }
+
+  function startTimer(){
+    stopTimer();
+    timerStart = performance.now();
+    timerFillEl.classList.remove('is-low');
+    timerFillEl.style.width = '100%';
+    function tick(){
+      var elapsed = performance.now() - timerStart;
+      var pct = Math.max(0, 1 - elapsed / TIME_PER_PROBLEM);
+      timerFillEl.style.width = (pct * 100) + '%';
+      if (pct < 0.25) timerFillEl.classList.add('is-low');
+      if (pct <= 0 && !locked){
+        timeUp();
+        return;
+      }
+      if (!locked) timerRAF = requestAnimationFrame(tick);
+    }
+    timerRAF = requestAnimationFrame(tick);
+  }
+
+  function timeUp(){
+    if (locked) return;
+    locked = true;
+    stopTimer();
+    var btns = choicesEl.querySelectorAll('.speed-choice');
+    btns.forEach(function(b){
+      b.disabled = true;
+      if (parseInt(b.textContent, 10) === current.answer) b.classList.add('correct');
+    });
+    streak = 0;
+    feedbackEl.textContent = "Time's up — the answer was " + current.answer + '.';
+    feedbackEl.className = 'speed-feedback is-wrong';
+    if (window.AbacusSound) window.AbacusSound.wrong();
+    updateStatsDisplay();
+    advance();
+  }
+
+  function newProblem(){
+    locked = false;
+    current = makeProblem();
+    problemEl.textContent = current.a + ' ' + current.symbol + ' ' + current.b + ' = ?';
+    var btns = choicesEl.querySelectorAll('.speed-choice');
+    btns.forEach(function(btn, i){
+      btn.textContent = current.choices[i];
+      btn.className = 'speed-choice';
+      btn.disabled = false;
+    });
+    feedbackEl.textContent = '';
+    feedbackEl.className = 'speed-feedback';
+    startTimer();
+  }
+
+  function advance(){
+    setTimeout(function(){
+      idx++;
+      if (idx >= TOTAL_PROBLEMS){
+        finishSession();
+      } else {
+        newProblem();
+        updateStatsDisplay();
+      }
+    }, 1100);
+  }
+
+  function choiceClick(e){
+    var btn = e.target.closest('.speed-choice');
+    if (!btn || locked) return;
+    locked = true;
+    stopTimer();
+    var btns = choicesEl.querySelectorAll('.speed-choice');
+    btns.forEach(function(b){ b.disabled = true; });
+    var given = parseInt(btn.textContent, 10);
+    if (given === current.answer){
+      btn.classList.add('correct');
+      streak++;
+      if (streak > bestStreakThisRound) bestStreakThisRound = streak;
+      var points = 10 + Math.max(0, streak - 1) * 2;
+      sessionScore += points;
+      feedbackEl.textContent = 'Correct!';
+      feedbackEl.className = 'speed-feedback is-correct';
+      window.AbacusProgress.addScore(points);
+      window.AbacusProgress.setBestStreak(streak);
+      if (window.AbacusSound) window.AbacusSound.correct();
+    } else {
+      btn.classList.add('wrong');
+      btns.forEach(function(b){ if (parseInt(b.textContent,10) === current.answer) b.classList.add('correct'); });
+      streak = 0;
+      feedbackEl.textContent = 'Not quite — the answer is ' + current.answer + '.';
+      feedbackEl.className = 'speed-feedback is-wrong';
+      if (window.AbacusSound) window.AbacusSound.wrong();
+    }
+    updateStatsDisplay();
+    advance();
+  }
+
+  function startSession(){
+    idx = 0;
+    streak = 0;
+    bestStreakThisRound = 0;
+    sessionScore = 0;
+    locked = false;
+    playEl.style.display = '';
+    doneEl.style.display = 'none';
+    updateStatsDisplay();
+    newProblem();
+  }
+
+  function finishSession(){
+    stopTimer();
+    finalScoreEl.textContent = '+' + sessionScore;
+    var correctCount = Math.round(sessionScore / 10) > TOTAL_PROBLEMS ? TOTAL_PROBLEMS : Math.round(sessionScore / 10);
+    finalLineEl.textContent = correctCount + ' of ' + TOTAL_PROBLEMS + ' correct.';
+    bestLineEl.textContent = 'Best streak this round: ' + bestStreakThisRound;
+    playEl.style.display = 'none';
+    doneEl.style.display = '';
+    if (window.AbacusSound) window.AbacusSound.complete();
+  }
+
+  function openSession(){
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    startSession();
+  }
+
+  function closeSession(){
+    stopTimer();
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  choicesEl.addEventListener('click', choiceClick);
+  playAgainBtn.addEventListener('click', startSession);
+  closeBtn.addEventListener('click', closeSession);
+  overlay.addEventListener('click', function(e){
+    if (e.target === overlay) closeSession();
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeSession();
+  });
+
+  openCard.addEventListener('click', function(e){
+    e.preventDefault();
+    openSession();
   });
 })();
 </script>
