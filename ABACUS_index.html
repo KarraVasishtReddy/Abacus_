@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AbacusMath — Learn math with beads, not boredom</title>
+<meta name="description" content="A playful abacus-based math practice site for kids. Move beads, build numbers, master addition and subtraction.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --cream:#FFF8EC;
+  --cream-deep:#FBEFD8;
+  --walnut:#3D2817;
+  --walnut-soft:#6B4A33;
+  --bead-red:#E8533C;
+  --bead-red-dark:#B83B28;
+  --bead-green:#2D9D78;
+  --bead-green-dark:#1F7A5C;
+  --bead-gold:#F2B632;
+  --bead-gold-dark:#C98F18;
+  --bead-blue:#4A6FA5;
+  --bead-blue-dark:#34527E;
+  --rod-wood:#C99B5F;
+  --frame-wood:#8B5A2B;
+  --frame-wood-dark:#6B4220;
+  --paper-line: rgba(61,40,23,0.12);
+  --shadow-soft: 0 4px 0 rgba(61,40,23,0.18);
+  --shadow-deep: 0 10px 30px rgba(61,40,23,0.18);
+  --radius-bead: 50%;
+  --radius-card: 22px;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--cream);
+  color:var(--walnut);
+  font-family:'Nunito',sans-serif;
+  font-weight:600;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+}
+
+h1,h2,h3,.display{
+  font-family:'Baloo 2', sans-serif;
+  font-weight:700;
+  color:var(--walnut);
+  margin:0;
+  line-height:1.1;
+}
+
+a{color:inherit;}
+button{font-family:inherit;}
+
+.wrap{
+  max-width:1140px;
+  margin:0 auto;
+  padding:0 28px;
+}
+
+/* texture: faint dot-grid like graph/counting paper */
+.bg-dots{
+  position:fixed;
+  inset:0;
+  background-image: radial-gradient(circle, var(--paper-line) 1px, transparent 1.4px);
+  background-size: 26px 26px;
+  z-index:-1;
+  pointer-events:none;
+  opacity:0.55;
+}
+
+/* ============ NAV ============ */
+header{
+  position:sticky; top:0; z-index:50;
+  background:rgba(255,248,236,0.92);
+  backdrop-filter: blur(8px);
+  border-bottom:2px solid var(--paper-line);
+}
+.nav{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 28px;
+  max-width:1140px; margin:0 auto;
+}
+.logo{
+  display:flex; align-items:center; gap:10px;
+  font-family:'Baloo 2',sans-serif; font-weight:800; font-size:22px;
+  text-decoration:none;
+  color:var(--walnut);
+}
+.logo-bead{
+  width:26px;height:26px;border-radius:50%;
+  background:linear-gradient(180deg, var(--bead-red) 0%, var(--bead-red-dark) 100%);
+  box-shadow: inset 0 -3px 0 rgba(0,0,0,0.18), inset 0 2px 0 rgba(255,255,255,0.35);
+  flex-shrink:0;
+}
+nav.links{
+  display:flex; gap:28px; align-items:center;
+}
+nav.links a{
+  text-decoration:none;
+  font-size:15px; font-weight:700;
+  color:var(--walnut-soft);
+  padding:8px 2px;
+  border-bottom:3px solid transparent;
+  transition:border-color .15s, color .15s;
+}
+nav.links a:hover, nav.links a:focus-visible{
+  color:var(--bead-red-dark);
+  border-bottom-color:var(--bead-gold);
+}
+.nav-cta{
+  background:var(--bead-green);
+  color:#fff !important;
+  padding:10px 20px;
+  border-radius:30px;
+  font-weight:800;
+  box-shadow:var(--shadow-soft);
+  border:none;
+  cursor:pointer;
+}
+.nav-cta:hover{ transform:translateY(-1px); box-shadow:0 5px 0 rgba(61,40,23,0.18); }
+@media (max-width: 760px){
+  nav.links{display:none;}
+}
+
+/* ============ HERO ============ */
+.hero{
+  padding:64px 0 40px;
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:8px;
+  text-align:center;
+}
+.eyebrow{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:'JetBrains Mono', monospace;
+  font-size:13px; font-weight:700;
+  letter-spacing:0.06em;
+  color:var(--bead-blue-dark);
+  background:#fff;
+  border:2px dashed var(--bead-blue);
+  border-radius:30px;
+  padding:6px 16px;
+  margin:0 auto 18px;
+}
+.hero h1{
+  font-size:clamp(34px, 6vw, 60px);
+  max-width:780px;
+  margin:0 auto 16px;
+}
+.hero h1 .hl{
+  color:var(--bead-red);
+  position:relative;
+  white-space:nowrap;
+}
+.hero p.sub{
+  max-width:560px;
+  margin:0 auto 30px;
+  font-size:18px;
+  color:var(--walnut-soft);
+  font-weight:600;
+}
+.hero-ctas{
+  display:flex; gap:14px; justify-content:center; margin-bottom:18px; flex-wrap:wrap;
+}
+.btn{
+  display:inline-flex; align-items:center; gap:8px;
+  font-weight:800; font-size:16px;
+  padding:14px 28px;
+  border-radius:30px;
+  text-decoration:none;
+  cursor:pointer;
+  border:none;
+  transition:transform .12s, box-shadow .12s;
+}
+.btn-primary{
+  background:var(--bead-red);
+  color:#fff;
+  box-shadow:0 5px 0 var(--bead-red-dark);
+}
+.btn-primary:hover{ transform:translateY(-2px); box-shadow:0 7px 0 var(--bead-red-dark); }
+.btn-primary:active{ transform:translateY(2px); box-shadow:0 2px 0 var(--bead-red-dark); }
+.btn-ghost{
+  background:#fff;
+  color:var(--walnut);
+  border:2px solid var(--walnut);
+  box-shadow:0 5px 0 var(--walnut);
+}
+.btn-ghost:hover{ transform:translateY(-2px); box-shadow:0 7px 0 var(--walnut); }
+
+/* ============ ABACUS (signature interactive element) ============ */
+.abacus-stage{
+  margin:36px auto 0;
+  max-width:720px;
+}
+.abacus-frame{
+  background: linear-gradient(180deg, var(--frame-wood) 0%, var(--frame-wood-dark) 100%);
+  border-radius:20px;
+  padding:22px 22px 28px;
+  box-shadow: var(--shadow-deep);
+  position:relative;
+}
+.abacus-frame::before{
+  content:"";
+  position:absolute; inset:8px;
+  border:2px solid rgba(255,255,255,0.08);
+  border-radius:14px;
+  pointer-events:none;
+}
+.abacus-readout{
+  display:flex; justify-content:center; align-items:center; gap:10px;
+  background:var(--walnut);
+  border-radius:12px;
+  padding:10px 18px;
+  margin-bottom:18px;
+}
+.abacus-readout span{
+  font-family:'JetBrains Mono', monospace;
+  font-weight:700; font-size:13px;
+  color:var(--bead-gold);
+  letter-spacing:0.08em;
+}
+.abacus-readout strong{
+  font-family:'JetBrains Mono', monospace;
+  font-weight:700; font-size:32px;
+  color:#fff;
+  letter-spacing:0.04em;
+  min-width:90px;
+  text-align:center;
+}
+.rods{
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  padding:14px 10px 6px;
+  background: var(--rod-wood);
+  border-radius:12px;
+  position:relative;
+}
+.rods::after{
+  /* the horizontal divider bar (reckoning bar) sits just below the
+     heaven bead, separating it from the four earth beads below */
+  content:"";
+  position:absolute;
+  left:8px; right:8px;
+  top:54px;
+  height:8px;
+  background:var(--frame-wood-dark);
+  border-radius:3px;
+  z-index:1;
+}
+.rod{
+  position:relative;
+  width:46px;
+  height:230px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.rod-line{
+  position:absolute;
+  top:0; bottom:0; left:50%;
+  width:6px;
+  margin-left:-3px;
+  background:linear-gradient(90deg, rgba(0,0,0,0.18), rgba(255,255,255,0.12), rgba(0,0,0,0.18));
+  border-radius:3px;
+  z-index:0;
+}
+.bead{
+  width:40px; height:26px;
+  border-radius:50%;
+  position:relative;
+  z-index:2;
+  cursor:pointer;
+  border:none;
+  flex-shrink:0;
+  transition: margin .16s cubic-bezier(.4,1.4,.6,1);
+  box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2), inset 0 3px 0 rgba(255,255,255,0.3), 0 2px 3px rgba(0,0,0,0.25);
+}
+.bead:focus-visible{
+  outline:3px solid #fff;
+  outline-offset:2px;
+}
+.bead.heaven{ background:linear-gradient(180deg, var(--bead-gold) 0%, var(--bead-gold-dark) 100%); margin-bottom:6px;}
+.bead.earth-0{ background:linear-gradient(180deg, var(--bead-blue) 0%, var(--bead-blue-dark) 100%);}
+.bead.earth-1{ background:linear-gradient(180deg, var(--bead-green) 0%, var(--bead-green-dark) 100%);}
+.bead.earth-2{ background:linear-gradient(180deg, var(--bead-red) 0%, var(--bead-red-dark) 100%);}
+.bead.earth-3{ background:linear-gradient(180deg, var(--bead-blue) 0%, var(--bead-blue-dark) 100%);}
+.rod-label{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  font-weight:700;
+  color:rgba(255,255,255,0.55);
+  margin-top:8px;
+}
+.abacus-hint{
+  text-align:center;
+  font-size:13px;
+  color:var(--walnut-soft);
+  margin-top:16px;
+  font-weight:600;
+}
+.abacus-reset{
+  display:block;
+  margin:14px auto 0;
+  background:none;
+  border:2px solid var(--walnut-soft);
+  color:var(--walnut-soft);
+  font-weight:700;
+  font-size:13px;
+  padding:6px 16px;
+  border-radius:20px;
+  cursor:pointer;
+}
+.abacus-reset:hover{ background:var(--walnut-soft); color:#fff; }
+
+/* ============ STRIP STATS ============ */
+.strip{
+  display:flex;
+  justify-content:center;
+  gap:48px;
+  flex-wrap:wrap;
+  padding:46px 0;
+  border-top:2px dashed var(--paper-line);
+  border-bottom:2px dashed var(--paper-line);
+  margin-top:50px;
+}
+.strip .stat{ text-align:center; }
+.strip .stat b{
+  display:block;
+  font-family:'Baloo 2',sans-serif;
+  font-size:34px;
+  color:var(--bead-red);
+}
+.strip .stat span{
+  font-size:13px;
+  color:var(--walnut-soft);
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+}
+
+/* ============ SECTIONS GENERAL ============ */
+section{ padding:80px 0; }
+.section-head{
+  text-align:center;
+  max-width:560px;
+  margin:0 auto 48px;
+}
+.section-head .eyebrow{ margin-bottom:14px; }
+.section-head h2{ font-size:clamp(28px,4vw,40px); margin-bottom:12px; }
+.section-head p{ color:var(--walnut-soft); font-size:16px; margin:0; }
+
+/* ============ MODULES — laid out like rod rows ============ */
+.modules{
+  display:grid;
+  gap:18px;
+}
+.module-row{
+  display:grid;
+  grid-template-columns: 64px 1fr auto;
+  align-items:center;
+  gap:22px;
+  background:#fff;
+  border:3px solid var(--walnut);
+  border-radius:18px;
+  padding:20px 24px;
+  box-shadow:0 4px 0 rgba(61,40,23,0.12);
+  text-decoration:none;
+  transition:transform .12s;
+}
+.module-row:hover{ transform:translateX(4px); }
+.module-bead-icon{
+  width:56px; height:56px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+  box-shadow: inset 0 -5px 0 rgba(0,0,0,0.18), inset 0 3px 0 rgba(255,255,255,0.3);
+}
+.module-bead-icon svg{ width:28px; height:28px; }
+.mi-red{ background:linear-gradient(180deg, var(--bead-red), var(--bead-red-dark)); }
+.mi-green{ background:linear-gradient(180deg, var(--bead-green), var(--bead-green-dark)); }
+.mi-gold{ background:linear-gradient(180deg, var(--bead-gold), var(--bead-gold-dark)); }
+.mi-blue{ background:linear-gradient(180deg, var(--bead-blue), var(--bead-blue-dark)); }
+.module-text h3{ font-size:19px; margin-bottom:4px; }
+.module-text p{ margin:0; font-size:14px; color:var(--walnut-soft); font-weight:600; }
+.module-level{
+  font-family:'JetBrains Mono', monospace;
+  font-size:12px; font-weight:700;
+  background:var(--cream-deep);
+  border:2px solid var(--walnut);
+  padding:6px 12px;
+  border-radius:20px;
+  white-space:nowrap;
+}
+
+/* ============ PRACTICE DEMO ============ */
+.practice-demo{
+  background:linear-gradient(180deg, var(--cream-deep), var(--cream));
+  border:3px solid var(--walnut);
+  border-radius:28px;
+  padding:42px;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:36px;
+  align-items:center;
+}
+@media (max-width: 760px){ .practice-demo{ grid-template-columns:1fr; padding:28px; } }
+.demo-card{
+  background:#fff;
+  border:3px solid var(--walnut);
+  border-radius:18px;
+  padding:24px;
+  text-align:center;
+}
+.demo-problem{
+  font-family:'JetBrains Mono', monospace;
+  font-size:38px;
+  font-weight:700;
+  margin-bottom:18px;
+}
+.demo-choices{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.demo-choice{
+  font-family:'JetBrains Mono', monospace;
+  font-size:20px;
+  font-weight:700;
+  padding:14px;
+  border-radius:12px;
+  border:3px solid var(--walnut);
+  background:#fff;
+  cursor:pointer;
+  transition: background .12s, color .12s, transform .08s;
+}
+.demo-choice:hover{ background:var(--bead-gold); transform:translateY(-2px); }
+.demo-choice.correct{ background:var(--bead-green); color:#fff; border-color:var(--bead-green-dark); }
+.demo-choice.wrong{ background:var(--bead-red); color:#fff; border-color:var(--bead-red-dark); }
+.demo-feedback{
+  margin-top:14px; font-size:14px; font-weight:700; color:var(--walnut-soft); min-height:20px;
+}
+.demo-copy h3{ font-size:24px; margin-bottom:12px; }
+.demo-copy p{ color:var(--walnut-soft); font-size:15px; line-height:1.6; margin:0 0 18px; }
+.demo-copy ul{ margin:0; padding:0; list-style:none; }
+.demo-copy li{
+  display:flex; gap:10px; align-items:flex-start;
+  font-size:14px; color:var(--walnut); font-weight:700;
+  margin-bottom:10px;
+}
+.demo-copy li .dot{
+  width:8px;height:8px;border-radius:50%;background:var(--bead-red); margin-top:6px; flex-shrink:0;
+}
+
+/* ============ TESTIMONIAL / PARENT NOTE ============ */
+.parent-note{
+  background:var(--walnut);
+  color:var(--cream);
+  border-radius:28px;
+  padding:48px;
+  display:grid;
+  grid-template-columns: auto 1fr;
+  gap:28px;
+  align-items:center;
+}
+@media (max-width:760px){ .parent-note{ grid-template-columns:1fr; padding:32px; text-align:center; } }
+.parent-note .badge{
+  width:64px; height:64px;
+  border-radius:50%;
+  background:var(--bead-gold);
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Baloo 2',sans-serif; font-weight:800; font-size:26px;
+  color:var(--walnut);
+  margin:0 auto;
+}
+.parent-note p{
+  font-size:18px;
+  font-weight:600;
+  line-height:1.6;
+  margin:0 0 8px;
+  font-family:'Baloo 2',sans-serif;
+  font-weight:500;
+}
+.parent-note span{
+  font-size:13px;
+  color:var(--bead-gold);
+  font-weight:700;
+  font-family:'JetBrains Mono',monospace;
+}
+
+/* ============ FOOTER ============ */
+footer{
+  border-top:2px dashed var(--paper-line);
+  padding:40px 0 30px;
+  text-align:center;
+}
+footer p{ color:var(--walnut-soft); font-size:13px; font-weight:700; margin:6px 0; }
+footer .foot-links{ display:flex; gap:20px; justify-content:center; margin-bottom:14px; }
+footer .foot-links a{ text-decoration:none; color:var(--walnut); font-size:14px; font-weight:700; }
+footer .foot-links a:hover{ color:var(--bead-red); }
+
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+</style>
+</head>
+<body>
+
+<div class="bg-dots" aria-hidden="true"></div>
+
+<header>
+  <div class="nav">
+    <a href="#top" class="logo"><span class="logo-bead" aria-hidden="true"></span> AbacusMath</a>
+    <nav class="links" aria-label="Main navigation">
+      <a href="#abacus">Try the abacus</a>
+      <a href="#modules">Practice modules</a>
+      <a href="#how">How it works</a>
+    </nav>
+    <button class="nav-cta" onclick="document.getElementById('modules').scrollIntoView({behavior:'smooth'})">Start practicing</button>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero wrap">
+    <span class="eyebrow"><i aria-hidden="true">●</i> built for ages 6&ndash;12</span>
+    <h1>Math clicks when you can<br><span class="hl">touch</span> the numbers.</h1>
+    <p class="sub">AbacusMath turns place value, addition, and subtraction into something kids can see and move &mdash; one bead at a time.</p>
+    <div class="hero-ctas">
+      <a href="#modules" class="btn btn-primary">Start practicing &rarr;</a>
+      <a href="#abacus" class="btn btn-ghost">Play with the abacus</a>
+    </div>
+
+    <div class="abacus-stage" id="abacus">
+      <div class="abacus-frame">
+        <div class="abacus-readout">
+          <span>VALUE</span>
+          <strong id="readout">0</strong>
+          <span>&larr; click beads</span>
+        </div>
+        <div class="rods" id="rods"></div>
+      </div>
+      <p class="abacus-hint">Each rod is a place value. Click a gold bead to add 5. Click the blue, green, and red beads to add 1 each.</p>
+      <button class="abacus-reset" id="resetAbacus">Reset to 0</button>
+    </div>
+  </section>
+
+  <div class="strip wrap">
+    <div class="stat"><b>4</b><span>practice modules</span></div>
+    <div class="stat"><b>1,000+</b><span>problems generated</span></div>
+    <div class="stat"><b>0</b><span>logins required</span></div>
+    <div class="stat"><b>&infin;</b><span>tries per problem</span></div>
+  </div>
+
+  <section id="modules" class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">practice modules</span>
+      <h2>Pick a rod, start counting.</h2>
+      <p>Each module focuses on one skill, just like each rod on a real abacus holds one place value.</p>
+    </div>
+
+    <div class="modules">
+      <a class="module-row" href="#" data-module="placevalue">
+        <div class="module-bead-icon mi-blue" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="8"/></svg>
+        </div>
+        <div class="module-text">
+          <h3>Place value builder</h3>
+          <p>Move beads to build a target number on the abacus.</p>
+        </div>
+        <span class="module-level">level 1</span>
+      </a>
+
+      <a class="module-row" href="#" data-module="addition">
+        <div class="module-bead-icon mi-green" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        </div>
+        <div class="module-text">
+          <h3>Bead addition</h3>
+          <p>Add two numbers by combining beads on two rods.</p>
+        </div>
+        <span class="module-level">level 2</span>
+      </a>
+
+      <a class="module-row" href="#" data-module="subtraction">
+        <div class="module-bead-icon mi-red" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 12h14"/></svg>
+        </div>
+        <div class="module-text">
+          <h3>Bead subtraction</h3>
+          <p>Take beads away and read the number that's left.</p>
+        </div>
+        <span class="module-level">level 2</span>
+      </a>
+
+      <a class="module-row" href="#" data-module="speed">
+        <div class="module-bead-icon mi-gold" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="9"/></svg>
+        </div>
+        <div class="module-text">
+          <h3>Speed rounds</h3>
+          <p>Mental math against the clock once the basics feel easy.</p>
+        </div>
+        <span class="module-level">level 3</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="wrap" id="how">
+    <div class="practice-demo">
+      <div class="demo-card">
+        <div class="demo-problem" id="demoProblem">7 + 5 = ?</div>
+        <div class="demo-choices" id="demoChoices">
+          <button class="demo-choice">11</button>
+          <button class="demo-choice">12</button>
+          <button class="demo-choice">13</button>
+          <button class="demo-choice">10</button>
+        </div>
+        <p class="demo-feedback" id="demoFeedback">Try it &mdash; tap an answer</p>
+      </div>
+      <div class="demo-copy">
+        <h3>Every problem, the same three steps.</h3>
+        <p>We keep the loop short so kids stay in it &mdash; see the problem, picture the beads, pick the answer.</p>
+        <ul>
+          <li><span class="dot"></span> See a problem sized to their level.</li>
+          <li><span class="dot"></span> Picture it on the abacus if they're stuck &mdash; no penalty for looking.</li>
+          <li><span class="dot"></span> Get an answer and an explanation, instantly.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="parent-note">
+      <div class="badge">5★</div>
+      <div>
+        <p>"My daughter used to dread word problems. Now she asks to do '10 more rounds' on the abacus before bed. It's the first math thing that's actually stuck."</p>
+        <span>&mdash; a parent, on the bead addition module</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="foot-links">
+    <a href="#abacus">Abacus</a>
+    <a href="#modules">Modules</a>
+    <a href="#how">How it works</a>
+  </div>
+  <p>AbacusMath &middot; built for curious kids and the grown-ups who love them</p>
+  <p>&copy; 2026 AbacusMath</p>
+</footer>
+
+<script>
+(function(){
+  var rodsEl = document.getElementById('rods');
+  var readoutEl = document.getElementById('readout');
+  var numRods = 3; // ones, tens, hundreds
+  var rodNames = ['ONES','TENS','HUNDREDS'];
+  // state[rodIndex] = {heaven: bool, earth: number 0-4}
+  var state = [];
+  for (var i=0;i<numRods;i++){ state.push({heaven:false, earth:0}); }
+
+  function buildRods(){
+    rodsEl.innerHTML = '';
+    // build left-to-right as hundreds, tens, ones (reading order)
+    for (var r = numRods-1; r >= 0; r--){
+      var rod = document.createElement('div');
+      rod.className = 'rod';
+      rod.dataset.rod = r;
+
+      var line = document.createElement('div');
+      line.className = 'rod-line';
+      rod.appendChild(line);
+
+      var heavenBead = document.createElement('button');
+      heavenBead.type = 'button';
+      heavenBead.className = 'bead heaven';
+      heavenBead.setAttribute('aria-label', rodNames[r] + ' five-bead, tap to toggle');
+      heavenBead.dataset.rod = r;
+      heavenBead.dataset.part = 'heaven';
+      rod.appendChild(heavenBead);
+
+      for (var e = 0; e < 4; e++){
+        var earthBead = document.createElement('button');
+        earthBead.type = 'button';
+        earthBead.className = 'bead earth-' + e;
+        earthBead.setAttribute('aria-label', rodNames[r] + ' one-bead ' + (e+1) + ', tap to toggle');
+        earthBead.dataset.rod = r;
+        earthBead.dataset.part = 'earth';
+        earthBead.dataset.index = e;
+        rod.appendChild(earthBead);
+      }
+
+      var label = document.createElement('div');
+      label.className = 'rod-label';
+      label.textContent = rodNames[r];
+      rod.appendChild(label);
+
+      rodsEl.appendChild(rod);
+    }
+  }
+
+  function render(){
+    var beads = rodsEl.querySelectorAll('.bead');
+    beads.forEach(function(b){
+      var r = parseInt(b.dataset.rod, 10);
+      var s = state[r];
+      if (b.dataset.part === 'heaven'){
+        b.style.marginTop = s.heaven ? '4px' : '0px';
+        b.style.opacity = s.heaven ? '1' : '0.55';
+      } else {
+        var idx = parseInt(b.dataset.index, 10);
+        var active = idx < s.earth;
+        b.style.marginTop = active ? '14px' : '4px';
+        b.style.opacity = active ? '1' : '0.55';
+      }
+    });
+
+    var total = 0;
+    for (var r = 0; r < numRods; r++){
+      var place = Math.pow(10, r);
+      var val = (state[r].heaven ? 5 : 0) + state[r].earth;
+      total += val * place;
+    }
+    readoutEl.textContent = total.toLocaleString();
+  }
+
+  var rodsEl_clickHandler = function(e){
+    var b = e.target.closest('.bead');
+    if (!b) return;
+    var r = parseInt(b.dataset.rod, 10);
+    if (b.dataset.part === 'heaven'){
+      state[r].heaven = !state[r].heaven;
+    } else {
+      var idx = parseInt(b.dataset.index, 10);
+      // clicking an earth bead toggles up to that bead (abacus convention)
+      if (idx < state[r].earth){
+        state[r].earth = idx;
+      } else {
+        state[r].earth = idx + 1;
+      }
+    }
+    render();
+  };
+
+  buildRods();
+  rodsEl.addEventListener('click', rodsEl_clickHandler);
+  rodsEl.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      rodsEl_clickHandler(e);
+    }
+  });
+  render();
+
+  document.getElementById('resetAbacus').addEventListener('click', function(){
+    state = [];
+    for (var i=0;i<numRods;i++){ state.push({heaven:false, earth:0}); }
+    render();
+  });
+
+  // ---- mini demo quiz ----
+  var problems = [
+    {q:'7 + 5 = ?', choices:['11','12','13','10'], correct:'12'},
+    {q:'9 + 6 = ?', choices:['14','16','15','13'], correct:'15'},
+    {q:'13 - 4 = ?', choices:['8','9','10','7'], correct:'9'},
+    {q:'8 + 8 = ?', choices:['15','17','16','18'], correct:'16'}
+  ];
+  var pIndex = 0;
+  var problemEl = document.getElementById('demoProblem');
+  var choicesEl = document.getElementById('demoChoices');
+  var feedbackEl = document.getElementById('demoFeedback');
+  var locked = false;
+
+  function loadProblem(){
+    locked = false;
+    var p = problems[pIndex % problems.length];
+    problemEl.textContent = p.q;
+    feedbackEl.textContent = 'Try it — tap an answer';
+    var btns = choicesEl.querySelectorAll('.demo-choice');
+    btns.forEach(function(btn, i){
+      btn.textContent = p.choices[i];
+      btn.className = 'demo-choice';
+      btn.disabled = false;
+    });
+  }
+
+  choicesEl.addEventListener('click', function(e){
+    var btn = e.target.closest('.demo-choice');
+    if (!btn || locked) return;
+    locked = true;
+    var p = problems[pIndex % problems.length];
+    var btns = choicesEl.querySelectorAll('.demo-choice');
+    btns.forEach(function(b){ b.disabled = true; });
+    if (btn.textContent === p.correct){
+      btn.classList.add('correct');
+      feedbackEl.textContent = 'Nice! That\'s right.';
+    } else {
+      btn.classList.add('wrong');
+      feedbackEl.textContent = 'Not quite — the answer is ' + p.correct + '.';
+      btns.forEach(function(b){ if (b.textContent === p.correct) b.classList.add('correct'); });
+    }
+    setTimeout(function(){
+      pIndex++;
+      loadProblem();
+    }, 1400);
+  });
+
+  loadProblem();
+
+  // module rows are placeholders for now — gentle scroll-to-top nudge
+  document.querySelectorAll('.module-row').forEach(function(row){
+    row.addEventListener('click', function(e){
+      e.preventDefault();
+      document.getElementById('abacus').scrollIntoView({behavior:'smooth', block:'center'});
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
